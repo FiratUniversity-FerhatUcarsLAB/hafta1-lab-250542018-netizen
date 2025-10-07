@@ -1,4 +1,41 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250542018
+AD-SOYAD:Akın Ağaçbacak
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+
+FONKSIYON SecmeliSirala(Ogrenci_Notlari_Listesi)
+    
+    N = Ogrenci_Notlari_Listesi'nin Uzunluğu
+
+    // DIŞ DÖNGÜ: Listenin her pozisyonuna doğru notu yerleştirmek için (Tekrarlayan İşlem)
+    DÖNGÜ i = 0'dan N-2'ye kadar 
+        
+        // Başlangıçta, i. elemanın en büyük olduğunu varsayıyoruz.
+        en_buyuk_not_indeksi = i 
+
+        // İÇ DÖNGÜ: Geri kalan listede en büyük notu aramak için (Tekrarlayan İşlem)
+        DÖNGÜ j = i + 1'den N-1'e kadar
+            
+            // KARŞILAŞTIRMA KRİTERİ (Koşullu Durum): Mevcut en büyük notu güncelle
+            EĞER (Ogrenci_Notlari_Listesi[j]'nin Notu > Ogrenci_Notlari_Listesi[en_buyuk_not_indeksi]'nin Notu) İSE
+                en_buyuk_not_indeksi = j
+            SON
+
+        SON_DÖNGÜ
+
+        // TAKAS: En büyük notu (en_buyuk_not_indeksi), şu anki doğru konuma (i) taşı
+        // Koşullu Durum: Zaten doğru yerdeyse takasa gerek yok
+        EĞER (en_buyuk_not_indeksi DEĞİL i) İSE
+            
+            // Üç Adımlı Takas İşlemi
+            GEÇİCİ = Ogrenci_Notlari_Listesi[i]
+            Ogrenci_Notlari_Listesi[i] = Ogrenci_Notlari_Listesi[en_buyuk_not_indeksi]
+            Ogrenci_Notlari_Listesi[en_buyuk_not_indeksi] = GEÇİCİ
+            
+        SON
+
+    SON_DÖNGÜ
+
+    DÖNDÜR Ogrenci_Notlari_Listesi // Artık en yüksekten en düşüğe sıralanmış liste
+SON
