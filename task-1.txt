@@ -1,4 +1,158 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250542018  
+AD-SOYAD: Akın Ağaçbacak
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+1. BAŞLA
+
+2. Girdi al:
+   2.1. gun_sayisi ← Kullanıcıdan "Çalışma kaç gün sürecek?" al
+   2.2. gunluk_calisma_saati ← Kullanıcıdan "Günde kaç saat çalışabilirsin?" al
+   2.3. konular ← Kullanıcıdan "Çalışılacak konular listesi" al
+        // Her konu: {konu_adi, zorluk_derecesi (1-5), tahmini_saat}
+   
+3. Eğer (gun_sayisi <= 0) VEYA (gunluk_calisma_saati <= 0) ise:
+   3.1. Yaz: "Hata: Gün sayısı ve günlük çalışma saati pozitif olmalı."
+   3.2. DUR
+
+4. Toplam çalışma kapasitesini hesapla:
+   4.1. toplam_musait_saat ← gun_sayisi * gunluk_calisma_saati
+   4.2. toplam_tahmini_saat ← 0
+   4.3. Her konu için:
+        toplam_tahmini_saat ← toplam_tahmini_saat + konu.tahmini_saat
+
+5. Eğer (toplam_tahmini_saat > toplam_musait_saat) ise:
+   5.1. Yaz: "Uyarı: Tüm konulara zaman yetmeyebilir. Önceliklendirme yapılacak."
+   5.2. Konuları zorluk_derecesi ve tahmini_saat ağırlığına göre sırala (önce zor/süre uzun)
+   5.3. kalan_saat ← toplam_musait_saat
+   5.4. planlanacak_konular ← boş liste
+   5.5. Her konu için (sıralamaya göre):
+        Eğer (konu.tahmini_saat <= kalan_saat) ise:
+            planlanacak_konular'a konuyu ekle
+            kalan_saat ← kalan_saat - konu.tahmini_saat
+        Değilse:
+            Eğer (kalan_saat > 0) ise:
+                yeni_konu ← konu
+                yeni_konu.tahmini_saat ← kalan_saat
+                yeni_konu.not ← "kısmi"
+                planlanacak_konular'a yeni_konu ekle
+                kalan_saat ← 0
+            KIR // zaman bitti
+   5.6. konular ← planlanacak_konular
+
+6. Günlük plan oluştur (ilk dağılım - temel yerleştirme):
+   6.1. gunluk_planlar ← uzunluğu gun_sayisi olan dizi; her eleman:
+        {calisma_bloklari: boş liste, mevcut_bos_saat: gunluk_calisma_saati}
+   6.2. konu_index ← 0
+   6.3. Eğer konular uzunluğu > 0 ise:
+        kalan_konu_saati ← konular[0].tahmini_saat
+      Değilse:
+        kalan_konu_saati ← 0
+
+   6.4. For gun from 1 to gun_sayisi:
+         gunluk_kalan_saat ← gunluk_planlar[gun].mevcut_bos_saat
+
+         While (gunluk_kalan_saat > 0) VE (konu_index < konular.uzunluk):
+             ayrilan_saat ← min(gunluk_kalan_saat, kalan_konu_saati)
+
+             gunluk_planlar[gun].calisma_bloklari.add(
+                 {konu_adi: konular[konu_index].konu_adi,
+                  calisma_saat: ayrilan_saat,
+                  tip: "study"}
+             )
+
+             gunluk_kalan_saat ← gunluk_kalan_saat - ayrilan_saat
+             gunluk_planlar[gun].mevcut_bos_saat ← gunluk_kalan_saat
+
+             kalan_konu_saati ← kalan_konu_saati - ayrilan_saat
+
+             Eğer (kalan_konu_saati == 0) ise:
+                 konu_index ← konu_index + 1
+                 Eğer (konu_index < konular.uzunluk) ise:
+                     kalan_konu_saati ← konular[konu_index].tahmini_saat
+
+         // Bu gün için yerleştirme bitti (konular bitmiş olabilir; gunluk_planlar[gun].mevcut_bos_saat bırakıldı)
+
+7. Eğer (toplam_musait_saat >= toplam_tahmini_saat) ise:
+   // Fazla zamanı kullanarak konuları döngü halinde tekrar et (round-robin).
+   7.1. fazladan_toplam_saat ← toplam_musait_saat - toplam_tahmini_saat
+   7.2. Eğer (fazladan_toplam_saat > 0) ise:
+        // Amaç: mevcut günlerde kalan boş saatlere "tekrar" blokları yerleştirmek,
+        // konular arasında sırayla dönüş yaparak her konuya küçük bloklar ayırmak.
+        tur_index ← 0
+        While (fazladan_toplam_saat > 0):
+            herhangi_bir_ayrilma_yapildi ← HATALI
+            For konu_index from 0 to konular.uzunluk - 1:
+                Eğer (fazladan_toplam_saat == 0) ise: KIR_TUMU
+                // Günler arasında boş slot ara
+                For gun from 1 to gun_sayisi:
+                    Eğer (gunluk_planlar[gun].mevcut_bos_saat >= 0.5) ise:
+                        ayrilan_saat ← min(1, gunluk_planlar[gun].mevcut_bos_saat, fazladan_toplam_saat)
+                        gunluk_planlar[gun].calisma_bloklari.add(
+                           {konu_adi: konular[konu_index].konu_adi,
+                            calisma_saat: ayrilan_saat,
+                            tip: "review"} )
+                        gunluk_planlar[gun].mevcut_bos_saat ← gunluk_planlar[gun].mevcut_bos_saat - ayrilan_saat
+                        fazladan_toplam_saat ← fazladan_toplam_saat - ayrilan_saat
+                        herhangi_bir_ayrilma_yapildi ← DOGRU
+                        KIR // bu konuyu bir gün için atadık, sonraki konuya geç
+                // eğer hiçbir gün boş slot bulunmadıysa devam et (döngü bitebilir)
+            Eğer (herhangi_bir_ayrilma_yapildi == HATALI) ise:
+                // Boş slot kalmadı; fazladan saat kullanılacak uygun yer yok
+                KIR // tekrar döngüsünü sonlandır
+
+8. İstatistik hesapla (her konu için toplam çalışma saati ve son günün (plan sonu) çalışma dağılımı):
+   8.1. toplam_calisma_konu ← sözlük (her konu_adi -> 0)
+   8.2. For gun from 1 to gun_sayisi:
+         For her blok in gunluk_planlar[gun].calisma_bloklari:
+             toplam_calisma_konu[blok.konu_adi] ← toplam_calisma_konu[blok.konu_adi] + blok.calisma_saat
+
+   8.3. son_dolu_gun ← en büyük gun indeksi such that gunluk_planlar[gun].calisma_bloklari boş değil
+        Eğer yoksa son_dolu_gun ← 0 (hiç çalışma yok)
+
+   8.4. son_oturum_calisma_konu ← sözlük (her konu_adi -> 0)
+        Eğer (son_dolu_gun > 0) ise:
+            For her blok in gunluk_planlar[son_dolu_gun].calisma_bloklari:
+                son_oturum_calisma_konu[blok.konu_adi] ← son_oturum_calisma_konu[blok.konu_adi] + blok.calisma_saat
+
+9. Eksik kalan konuları belirle:
+   9.1. eksik_konular ← boş liste
+   9.2. For each konu in orijinal konular listesi (girdi aşamasındaki):
+         // Eğer planlanan konular içinde yoksa veya kısmi notu varsa eksik say
+         Eğer (konu bulunmadı in konular) veya (konu.not == "kısmi") ise:
+             eksik_konular.add(konu.konu_adi + " (eksik veya kısmi)")
+
+10. Planı ekrana yaz:
+   10.1. For gun from 1 to gun_sayisi:
+         Yaz: "Gün " + gun + ":"
+         Eğer (gunluk_planlar[gun].calisma_bloklari boş ise):
+             Yaz: "   Dinlenme günü veya konu kalmadı."
+         Değilse:
+             Her blok için gunluk_planlar[gun].calisma_bloklari:
+                 Yaz: "   " + blok.konu_adi + " - " + blok.calisma_saat + " saat (" + blok.tip + ")"
+
+11. SON OTURUM ÖZETİ ve EKSİK KONULARI YAZDIR:
+   11.1. Eğer (son_dolu_gun == 0) ise:
+         Yaz: "Not: Hiç çalışma yapılmadı."
+       Değilse:
+         Yaz: "Son çalışma günü: Gün " + son_dolu_gun
+         Yaz: "Bu son oturumda konulara harcanan süreler:"
+         For each (konu_adi, saat) in son_oturum_calisma_konu:
+             Yaz: "   " + konu_adi + " - " + saat + " saat"
+         Yaz: "Her konu için toplam çalışılan saat:"
+         For each (konu_adi, toplam) in toplam_calisma_konu:
+             Yaz: "   " + konu_adi + " - " + toplam + " saat"
+
+   11.2. Eğer (eksik_konular boş değil) ise:
+         Yaz: "Eksik / kısmi kalan konular:"
+         For each eksik in eksik_konular:
+             Yaz: "   - " + eksik
+       Değilse:
+         Yaz: "Tüm planlanan konular tamamlandı."
+
+12. BİTİR
+
+
+
+## ChatGPT Görüşmesinin bağlantısı
+https://chatgpt.com/share/68e5635a-fed8-8009-b6bd-1c448eca7ee7
