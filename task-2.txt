@@ -1,4 +1,66 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250542018
+AD-SOYAD:Akın Ağaçbacak
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+
+FONKSIYON OncelikTabanliHamleBul(Tahta, Bizim_Isaretimiz, Rakip_Isareti)
+    
+    // Tahtadaki tüm boş hamleler için DÖNGÜ (Tekrarlayan İşlem)
+    Bos_Kareler = Tahta'daki tüm (satır, sütun) boş hücreleri
+
+    // 1. ÖNCELİK: KAZANMA HAMLESİ (En yüksek öncelik)
+    // Kendi işaretinle (Bizim_Isaretimiz) bir 3'lü dizilim tamamlıyor musun?
+    HER bir Hamle için Bos_Kareler'de
+        EĞER (Bu Hamle, KENDİ KAZANMAMIZI sağlıyorsa) İSE
+            DÖNDÜR Hamle
+        SON
+    SON_DÖNGÜ
+
+    // 2. ÖNCELİK: ENGELLEME HAMLESİ (Hayati önem)
+    // Rakibin işaretini (Rakip_Isareti) kullanarak, rakibin kazanmasını engelle.
+    HER bir Hamle için Bos_Kareler'de
+        EĞER (Bu Hamle, RAKİBİN KAZANMASINI engelliyorsa) İSE
+            DÖNDÜR Hamle
+        SON
+    SON_DÖNGÜ
+
+    // 3. ÖNCELİK: ÇATAL OLUŞTURMA (Optimal fırsat)
+    // Aynı anda iki farklı kazanma yolu oluşturuyor musun? (Minimax bu karmaşık analizi otomatik yapar, burada elle kodlamalıyız.)
+    HER bir Hamle için Bos_Kareler'de
+        EĞER (Bu Hamle, KENDİ LEHİMİZE ÇATAL oluşturuyorsa) İSE
+            DÖNDÜR Hamle
+        SON
+    SON_DÖNGÜ
+
+    // 4. ÖNCELİK: ÇATAL ENGELLEME (Kritik risk yönetimi)
+    // Rakibin çatal oluşturmasına izin verme
+    // Not: Bu, bazen birden fazla engelleme hamlesi gerektirebilir.
+    HER bir Hamle için Bos_Kareler'de
+        EĞER (Bu Hamle, RAKİBİN ÇATAL OLUŞTURMASINI engelliyorsa) İSE
+            DÖNDÜR Hamle
+        SON
+    SON_DÖNGÜ
+    
+    // 5. ÖNCELİK: MERKEZ (En değerli kare)
+    EĞER (Merkez kare (1, 1) BOŞ ise) İSE
+        DÖNDÜR Merkez (1, 1)
+    SON
+
+    // 6. ÖNCELİK: KÖŞELER (İkinci en değerli kareler)
+    // Tahtadaki 4 köşe karesini kontrol et
+    HER bir Köşe Hamlesi için {(0, 0), (0, 2), (2, 0), (2, 2)}
+        EĞER (Köşe Hamlesi BOŞ ise) İSE
+            DÖNDÜR Köşe Hamlesi
+        SON
+    SON_DÖNGÜ
+
+    // 7. ÖNCELİK: KENARLAR (Geriye kalan)
+    // Tahtadaki 4 kenar karesini kontrol et
+    HER bir Kenar Hamlesi için Geriye Kalan Boş Kareler
+        DÖNDÜR Kenar Hamlesi
+    SON_DÖNGÜ
+    
+    // Eğer tahtada boş kare kalmadıysa (Bu durum 7. adımda zaten halledilir, ancak hata kontrolü için)
+    DÖNDÜR HATA
+SON
