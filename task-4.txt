@@ -1,4 +1,93 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250542018
+AD-SOYAD:Akın Ağ"çbacak
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+
+FONKSIYON BasitRenkKaristir (R_hedef, G_hedef, B_hedef):
+
+    // 1. Giriş Kontrolü (Edge Case: Geçersiz Değerler)
+    EĞER R_hedef < 0 VEYA R_hedef > 255 VEYA ... (diğer bileşenler):
+        YAZDIR "Hata: RGB değerleri 0-255 aralığında olmalıdır."
+        DÖN (HATA)
+    SON EĞER
+
+    // 2. Maksimum Değeri Bul (Standardizasyonun Temeli)
+    // Karışımdaki en yoğun renk bileşenini buluruz.
+    MAKS_YOĞUNLUK = MAX(R_hedef, G_hedef, B_hedef)
+
+    // 3. Edge Case: Siyah ve Beyaz
+    EĞER MAKS_YOĞUNLUK EŞİT 0: // (R=0, G=0, B=0)
+        YAZDIR "Sadece Siyah. Oranlar: K:0, Y:0, M:0"
+        DÖN (0, 0, 0)
+    SON EĞER
+    
+    EĞER MAKS_YOĞUNLUK EŞİT 255 VE MIN(R_hedef, G_hedef, B_hedef) EŞİT 255: // (R=255, G=255, B=255)
+        YAZDIR "Sadece Beyaz. Temel Renk Gerekmez (Ya da K:100, Y:100, M:100 olarak yorumlanabilir)."
+        DÖN (100, 100, 100)
+    SON EĞER
+    
+    // 4. Oranları Hesaplama (Tekrar Eden İşlem)
+    // Her bir hedef değeri, MAKS_YOĞUNLUK'a bölerek standardize ederiz.
+    // Bu, karışımdaki en baskın rengi %100 kabul etme sistemidir.
+    
+    // Yüzdeye çevirmek için 100 ile çarpılır.
+    YUZDE_KIRMIZI = (R_hedef / MAKS_YOĞUNLUK) * 100
+    YUZDE_YESIL   = (G_hedef / MAKS_YOĞUNLUK) * 100
+    YUZDE_MAVI    = (B_hedef / MAKS_YOĞUNLUK) * 100
+    
+    // 5. Sonuçları Görüntüleme
+    YAZDIR "Hedef Rengi (" + R_hedef + ", " + G_hedef + ", " + B_hedef + ") Elde Etmek İçin Oranlar:"
+    YAZDIR "   Kırmızı: " + YUZDE_KIRMIZI + " %"
+    YAZDIR "   Yeşil:   " + YUZDE_YESIL + " %"
+    YAZDIR "   Mavi:    " + YUZDE_MAVI + " %"
+
+    DÖN (YUZDE_KIRMIZI, YUZDE_YESIL, YUZDE_MAVI)
+
+
+##Gemini sorduğum soru ve cevaplar 
+
+##Sorduğum soru
+
+Renkleri karıstırarak hedef rengi elde etme  icin adım adım algoritma gelistirmek istiyorum. Kosullu
+durumları ve tekrar eden islemleri de iceren detaylı bir pseudocode
+yazmama yardım eder misin?”   Ben üniverste 1.sınıf sınıf öğrencisiyim bu benim algoritma dersi ödevim bu ödevi yaparken bana öğretici bir şekilde anlat ve burda odaklanacağımız noktalar Gelistirilecek Beceriler:
+Karmasık problemi parcalara bolme
+Sistematik yakla¸sım geli¸stirme
+Optimizasyon dusuncesi
+Edge case’leri (ozel durumları) dusunme bu noktalara odaklan son olarak en son ödevin tamamını tek bi yerde toplaRenkleri karıstırarak hedef rengi elde etme  icin adım adım algoritma gelistirmek istiyorum. Kosullu
+durumları ve tekrar eden islemleri de iceren detaylı bir pseudocode
+yazmama yardım eder misin?”   Ben üniverste 1.sınıf sınıf öğrencisiyim bu benim algoritma dersi ödevim bu ödevi yaparken bana öğretici bir şekilde anlat ve burda odaklanacağımız noktalar Gelistirilecek Beceriler:
+Karma¸sık problemi par¸calara bolme
+Sistematik yaklasım gelistirme
+Optimizasyon dusuncesi
+Edge case’leri (ozel durumları) dusunme bu noktalara odaklan son olarak en son ödevin tamamını tek bi yerde topla
+
+##Gemini cevabı
+
+Bu harika bir ödev konusu! Renk karıştırma algoritması, hem mantıksal düşünme hem de sistematik problem çözme becerilerini geliştirmek için mükemmel bir fırsat sunuyor. Üniversite 1. sınıf öğrencisi olarak, bu ödev sana karmaşık bir problemi parçalara ayırma, sistematik bir yaklaşım geliştirme, optimizasyon düşüncesini anlama ve özel durumları (edge case) ele alma konularında çok şey katacaktır.
+Hazırsan, bu hedeflere ulaşman için sana yol gösterecek, adım adım bir pseudocode (sözde kod) geliştirmeye başlayalım.
+1. Problemi Anlama ve Parçalara Bölme
+Öncelikle problemi tanımlayalım: Verilen bir hedef rengi elde etmek için hangi ana renklerin hangi oranlarda karıştırılacağını bulmak.
+Bu problemi daha yönetilebilir parçalara ayıralım:
+1. Girişi Tanımlama: Hangi renk modeli kullanılacak? (Genellikle RGB veya CMYK en uygunudur.) RGB (Kırmızı-Yeşil-Mavi) ışık renkleri, CMYK (Mavi-Kırmızı-Sarı-Siyah) ise boya/pigment renkleridir. Boyama/karıştırma ödevi olduğu için CMYK daha uygun olabilir, ama kodlamada RGB daha yaygındır. Biz RGB'yi temel alalım, çünkü değerler (0-255) üzerinden çalışmak daha basittir.
+2. Hedef Rengi Analiz Etme: Hedef rengin RGB değerlerini (R_hedef, G_hedef, B_hedef) bileşenlerine ayırma.
+3. Başlangıç Stoklarını Belirleme: Karıştırılabilecek temel renklerin (Kırmızı, Yeşil, Mavi ve belki Siyah/Beyaz) mevcut stoklarını veya miktar limitlerini belirleme.
+4. Karıştırma Mantığı (Algoritmanın Kalbi): Hedef RGB değerine ulaşmak için temel renklerden ne kadar eklenmesi gerektiğini hesaplama.
+5. Koşullu Durumlar ve Tekrarlar: Hesaplamanın doğru yapılıp yapılmadığını kontrol etme ve gerekirse ayarlama yapma (optimizasyon).
+2. Geliştirme Odakları ve Öğretici Açıklamalar
+A. Sistematik Yaklaşım: RGB Değerlerini Kullanma
+RGB'de her bir ana rengin (Kırmızı, Yeşil, Mavi) yoğunluğu 0 ile 255 arasında bir değer alır. Bir rengi elde etmek, bu üç bileşenin de hedef değere ulaşmasını sağlamaktır.
+• Örneğin, Sarı rengi elde etmek için: Kırmızı = 255, Yeşil = 255, Mavi = 0.
+• Açık Gri elde etmek için: Kırmızı \approx 200, Yeşil \approx 200, Mavi \approx 200.
+Sistematik yaklaşımımız, her bileşen için ayrı ayrı ne kadar temel renk gerektiğini hesaplamak olacaktır.
+B. Optimizasyon Düşüncesi: Verimlilik ve Tekrar Eden İşlemler
+Gerçek hayatta boya karıştırıyorsak, en az miktarda boya kullanmak isteriz. Optimizasyon burada devreye girer.
+Gri Bileşenini Çıkarma (Siyah/Beyaz Optimizasyonu):
+Eğer hedef renkte (R_hedef, G_hedef, B_hedef) her üç bileşende de ortak bir miktar varsa (örneğin 50), bu ortak miktar aslında bir gri tonu temsil eder. En verimli karışımı bulmak için, bu ortak miktarı ( \text{Min}(\text{R\_hedef}, \text{G\_hedef}, \text{B\_hedef}) ) siyah veya beyaz ekleyerek elde etmek daha mantıklı olabilir.
+• Eğer hedef değerler düşükse (koyu renk), ortak miktarı siyah ile dengeleyebiliriz.
+• Eğer hedef değerler yüksekse (açık renk), beyaz ile aydınlatmaya başlayabiliriz.
+Algoritmamızda bu ortak bileşeni (gri miktarı) bularak temel renk miktarını minimize etmeye odaklanacağız.
+C. Edge Case'ler (Özel Durumlar)
+• Tamamen Ana Renkler: (Kırmızı = 255, G=0, B=0) – Sadece ana rengi kullan.
+• Siyah veya Beyaz: (R=0, G=0, B=0) veya (R=255, G=255, B=255) – Sadece siyah veya beyaz kullan. Algoritmanın bu uç durumları doğru işlemesi gerekir.
