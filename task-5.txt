@@ -1,4 +1,162 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250542018
+AD-SOYAD:Akın Ağaçbacak
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+FONKSİYON ZihinselAkışYönetimi(GörevListesi, MevcutEnerjiSeviyesi, BlokSüresi):
+
+    // 2.1. Zihinsel Skor ve Kategori Hesaplama
+    YENİ_LİSTE = BoşListe
+    
+    HER Görev İÇİN GörevListesi'nde:
+        
+        // A. Enerji ve Yük Skoru (Görevin zorluğunu ve karmaşıklığını birleştirir)
+        GörevZorluğu = Enerjiİhtiyacı * ZihinselYük 
+
+        // B. Rahatlatma Potansiyeli (Görevin bitince zihni ne kadar boşaltacağı)
+        RahatlatmaSkoru = TamamlanmaEtkisi * 2 / Enerjiİhtiyacı 
+        
+        // C. Nihai Zihinsel Skor Hesaplama (Skor Düşükse, o görevle Başlanmalı)
+        // Düşük Enerji İhtiyacı ve Yüksek Rahatlatma Skoru = Düşük Zihinsel Skor
+        ZihinselSkor = (GörevZorluğu * 0.7) - (RahatlatmaSkoru * 0.3)
+        // Düşük Skor = Daha Düşük Zihinsel Bariyer = Başlaması Kolay
+
+        Görev.ZihinselSkor = ZihinselSkor
+        YENİ_LİSTE'ye Görev'i ekle
+
+    // 2.2. Görevleri Kategorilere Ayırma (Akışı Düzenlemek İçin)
+    ÇOK_YÜKSEK_YÜK = ZihinselSkor > 15 olan Görevler
+    ORTA_YÜK = ZihinselSkor [5-15] arasında olan Görevler
+    DÜŞÜK_YÜK = ZihinselSkor < 5 olan Görevler // "Isınma" veya "Hızlı Kazanç" Görevleri
+
+    // 2.3. Optimal Akış Planı Oluşturma
+    AkışPlanı = BoşListe
+    
+    Eğer MevcutEnerjiSeviyesi YÜKSEK (4 veya 5) ise:
+        // Yüksek enerjide: Kritik, zor görevle başla, sonra orta ile rahatla. (Odaklanmayı Sınama)
+        PlanlamaSırası = [ÇOK_YÜKSEK_YÜK, ORTA_YÜK, DÜŞÜK_YÜK]
+    
+    Eğer MevcutEnerjiSeviyesi ORTA (3) ise:
+        // Orta enerjide: Düşük yükle başla (ısınma), sonra zorluğa geç. (Kademe Kademe Odaklanma)
+        PlanlamaSırası = [DÜŞÜK_YÜK, ÇOK_YÜKSEK_YÜK, ORTA_YÜK]
+        
+    Eğer MevcutEnerjiSeviyesi DÜŞÜK (1 veya 2) ise:
+        // Düşük enerjide: Sadece hızlı tamamlanabilir görevler. (Morali ve Enerjiyi Yükseltme)
+        PlanlamaSırası = [DÜŞÜK_YÜK, ORTA_YÜK, ÇOK_YÜKSEK_YÜK]
+
+    // 2.4. Akış Planına Görevleri Ekleme
+    HER Kategori İÇİN PlanlamaSırası'nda:
+        // Kategorideki görevleri ZihinselSkor'a göre artan sırada sırala (Başlaması en kolaydan zora)
+        SIRALI_KATEGORİ = Kategori'yi ZihinselSkor'a göre ARTAN sırada sırala
+
+        HER Görev İÇİN SIRALI_KATEGORİ'de:
+            // Görevi BlokSüresi kadar parçala ve plana ekle
+            KalanSüre = Görev.Süre
+            İKİNCİ BLOK_SAYISI = KalanSüre / BlokSüresi
+            
+            TEKRARLA BLOK_SAYISI kadar:
+                AkışPlanı'na ekle (Görev, BlokSüresi, "Odaklanma Bloğu")
+                KalanSüre = KalanSüre - BlokSüresi
+                
+            Eğer KalanSüre > 0 ise:
+                AkışPlanı'na ekle (Görev, KalanSüre, "Kalan Süre")
+
+    // 2.5. Sonuç
+    GERİ DÖN AkışPlanı // Görevlerin optimal sırasını ve çalışma sürelerini içerir.
+    
+BİTİR FONKSİYON
+
+
+##gemini sorduğum soru ve cevapları
+
+##sorduğum soru
+
+
+
+Uretken Algoritma Projesi
+Kendi Fikrinizi Gelistirin!
+Kendi ilgi alanınızdan bir problem se¸cin
+
+Uretken, efektif ve ozgun bir algoritma tasarlayın
+Daha once du¸sunmediginiz bir yaklasım deneyin
+Gunluk hayatınızı kolayla¸stıracak bir cozum bulun.   
+Bu benim algoritma dersi ödevimin konusu sen istediğim
+ psedeucode yazman bu ödevdeki fikrim ise son zamanlar problemim 
+haline gelen ödevleri düzenli bir şekilde yapmak ödevleri
+ düzenli , ödevden en yüksek notu almam ve anlayarak yapabileceğim
+ zamanındada tüm ödevleri yetiştirebileceğim bi algoritma yapmak istiyorum bu konuda yardım lazım 
+
+
+##gemini cevabı
+
+Bu harika bir fikir! Ödevleri yönetmek, notları maksimize etmek ve aynı zamanda konuları iyice öğrenmek günlük hayatta çok değerli bir beceri ve gerçekten özgün bir algoritmaya dönüştürülebilir.
+İsteğiniz üzerine, "Ödev Optimizasyon ve Planlama Algoritması" için bir pseudocode taslağı hazırladım. Bu algoritma, sadece teslim tarihlerine göre değil, aynı zamanda beklenen zorluk, konu önemi ve size kazandıracağı öğrenme değeri gibi faktörlere göre ödevlerinizi sıralar ve zamanınızı en verimli şekilde kullanmanız için bir plan çıkarır.
+Ödev Optimizasyon ve Planlama Algoritması (ÖOPA) Pseudocode
+Bu algoritma, her ödev için belirlenen kriterleri kullanarak bir Öncelik Skoru hesaplar ve bu skora göre çalışma sırasını belirler.
+
+FONKSİYON ÖdevOptimizasyon(ÖdevListesi, ŞuAnkiGün, BoşZaman):
+
+    // 2.1. Öncelik Skorunu Hesapla
+    YENİ_LİSTE = BoşListe
+    HER Ödev İÇİN ÖdevListesi'nde:
+        // A. Aciliyet Faktörü (Teslim tarihine ne kadar yakınsa o kadar yüksek)
+        Aciliyet = (TeslimTarihi - ŞuAnkiGün)
+        // AciliyetSkoru = 1 / Aciliyet (0'a bölmeyi engellemek için max(1, ...) kullan)
+        AciliyetSkoru = 5 / MAX(1, Aciliyet)
+
+        // B. Kalite ve Verim Faktörü (Not ve Anlama Etkisi Yüksek olmalı)
+        VerimSkoru = EtkiSkoru * 1.5 + EğlenceSkoru * 0.5 
+        // Etkiyi daha fazla ağırlıklandırıyoruz
+
+        // C. Zorluk / Süre Faktörü (Zor ve uzun ödevler daha erken başlamalı)
+        ZorlukSüreSkoru = ZorlukSkoru * TahminiSüre / 3 
+        // Zorluğu ve süreyi çarparak kritikliği artırıyoruz (3 ortalama bir bölendir)
+
+        // D. Nihai Öncelik Skoru Hesaplama (Daha yüksek skor = Daha Yüksek Öncelik)
+        ÖncelikSkoru = AciliyetSkoru * 0.5 + VerimSkoru * 0.3 + ZorlukSüreSkoru * 0.2
+        // Ağırlıklar ayarlanabilir (Aciliyet en yüksek etkiye sahip)
+
+        Ödev.ÖncelikSkoru = ÖncelikSkoru
+        LİSTE'ye Ödev'i ekle
+
+    // 2.2. Öncelik Skoruna Göre Sıralama
+    SIRALI_LİSTE = LİSTE'yi ÖncelikSkoru'na göre AZALAN sırada sırala
+
+    // 2.3. Günlük Planı Oluşturma (Parçalara Bölme Yaklaşımı)
+    Plan = BoşListe
+    KalanSüre = BoşZaman
+    
+    HER Ödev İÇİN SIRALI_LİSTE'de:
+        Eğer KalanSüre > 0 ise:
+            // Ödevi tek parça olarak değil, öğrenmeyi artıracak şekilde "bloklar" halinde çalış.
+            // BlokSüre = Minimum TahminiSüre'nin %25'i VEYA max 2 saat
+            ÇalışmaBloğu = MİN(Ödev.TahminiSüre, 2, KalanSüre)
+
+            Eğer ÇalışmaBloğu > 0 ise:
+                Plan'a ekle (Ödev, ÇalışmaBloğu saati, "Çalışma Bloğu")
+                Ödev.TahminiSüre = Ödev.TahminiSüre - ÇalışmaBloğu
+                KalanSüre = KalanSüre - ÇalışmaBloğu
+
+        Eğer Ödev.TahminiSüre <= 0 ise:
+            // Ödev tamamlandıysa listeden çıkarılır.
+            SIRALI_LİSTE'den Ödev'i kaldır
+
+    // 2.4. Sonuç
+    GERİ DÖN Plan // O gün hangi ödeve ne kadar çalışılacağını gösteren günlük program
+    
+BİTİR FONKSİYON
+
+
+##Verdiği codun ve benim fikrimin yetersizliği nedeniyle yeni bir fikir buldum ve yeni bir soru oluşturdum
+##sorum
+
+Bu ödevin aynısını ama fikiri değiştirmek istiyorum yeni fikir odaklanmayı 
+sağlayacak ve düşünceleri sıraya sokup zihni daha verimli kullanmaya yarayan
+ bi algoritma olmasını istiyorum.
+
+##Gemini verdiği cevap
+
+Bu çok ilginç ve değerli bir fikir! Zihinsel verimliliği artırmaya odaklanan bir algoritma, günümüzün bilgi yoğun ortamında gerçekten özgün bir çözüm olabilir.
+Yeni algoritma fikriniz için, "Zihinsel Odaklanma ve Düşünce Akışı Yönetimi Algoritması" (ZODA) pseudocode taslağını hazırladım. Bu algoritma, bilişsel yükünüzü analiz eder, düşüncelerinizi kategorize eder ve en verimli odaklanma bloğunu oluşturmanıza yardımcı olur.
+Zihinsel Odaklanma ve Düşünce Akışı Yönetimi Algoritması (ZODA) Pseudocode
+Bu algoritma, zihinsel görevleri (ödev, proje, hatta kişisel düşünceler) Enerji İhtiyacı ve Zihinsel Yük kriterlerine göre analiz eder ve zihni yormadan verimi maksimize edecek bir akış planı sunar.
